@@ -1,0 +1,337 @@
+port: 27890
+socks-port: 27890
+mixed-port: 27890
+allow-lan: true
+mode: Rule
+log-level: warning
+ipv6: true
+external-controller: 127.0.0.1:9090
+
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - "*.msftncsi.com"
+    - "*.msftconnecttest.com"
+    - WORKGROUP
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+    - 180.76.76.76
+    - 114.114.114.114
+  fallback:
+    - 8.8.8.8
+    - 1.1.1.1
+    - 208.67.222.222
+    - 94.140.14.14
+  fallback-filter:
+     geoip: true
+     geoip-code: CN
+     ipcidr:
+       - 240.0.0.0/4
+       - 127.0.0.1/32
+
+proxy-groups:
+  - name: ♻️ 自动选择
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 60
+    tolerance: 10
+    proxies:
+      - 🇺🇲.US
+      - 🇸🇬.SG
+      - 🇭🇰.HK
+      - 🇨🇳.TW
+      - 🇯🇵.JP
+  - name: 🌍 国外媒体
+    type: select
+    proxies:
+      - 🇨🇳.TW
+      - ♻️ 自动选择
+      - 🚀 手动切换
+      - 🇭🇰.HK
+      - DIRECT
+  - name: 📺 番剧出差
+    type: select
+    proxies:
+      - 🇭🇰.HK
+      - ♻️ 自动选择
+      - 🚀 手动切换
+      - 🇨🇳.TW
+      - DIRECT
+  - name: 📺 哔哩哔哩
+    type: select
+    proxies:
+      - DIRECT
+      - ♻️ 自动选择
+      - 🚀 手动切换
+      - 🇭🇰.HK
+      - 🇨🇳.TW
+  - name: 📢 做种汇报
+    type: select
+    proxies:
+      - DIRECT
+      - ♻️ 自动选择
+      - 🚀 手动切换
+      - 🇭🇰.HK
+      - 🇺🇲.US
+  - name: 🚀 手动切换
+    type: select
+    use:
+      - Hybrid
+      - Trunk
+  - name: 🇺🇲.US
+    type: load-balance
+    strategy: round-robin
+    url: https://www.gstatic.com/generate_204
+    interval: 60
+    tolerance: 10
+    filter: "US|美国|State"
+    use:
+      - Hybrid
+      - Trunk
+  - name: 🇸🇬.SG
+    type: load-balance
+    strategy: round-robin
+    url: https://www.gstatic.com/generate_204
+    interval: 60
+    tolerance: 10
+    filter: "SG|坡|狮|Singapore"
+    use:
+      - Hybrid
+      - Trunk
+  - name: 🇭🇰.HK
+    type: load-balance
+    strategy: round-robin
+    url: https://www.gstatic.com/generate_204
+    interval: 60
+    tolerance: 10
+    filter: "HK|香|Kong"
+    use:
+      - Hybrid
+      - Trunk
+  - name: 🇨🇳.TW
+    type: load-balance
+    strategy: round-robin
+    url: https://www.gstatic.com/generate_204
+    interval: 60
+    tolerance: 10
+    filter: "TW|台|Taiwan"
+    use:
+      - Hybrid
+      - Trunk
+  - name: 🇯🇵.JP
+    type: load-balance
+    strategy: round-robin
+    url: https://www.gstatic.com/generate_204
+    interval: 60
+    tolerance: 10
+    filter: "JP|Japan|东京|日本"
+    use:
+      - Hybrid
+      - Trunk
+
+proxy-providers:
+  Trunk:
+    type: http
+    url: "https://sub.xeton.dev/sub?target=clash&url=&udp=true&list=true&exclude=(专线)"
+    interval: 7200
+    path: ./Trunk.yaml
+    health-check:
+      enable: true
+      interval: 60
+      url: https://www.gstatic.com/generate_204
+  Hybrid:
+    type: http
+    url: "http://sub.xeton.dev/sub?target=clash&url=&udp=true&list=true&exclude=(专线)"
+    interval: 7200
+    path: ./Hybrid.yaml
+    health-check:
+      enable: true
+      interval: 60
+      url: https://www.gstatic.com/generate_204
+
+rule-providers:
+  Bahamut:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Bahamut.yaml"
+    path: ./ACL4SSR/Bahamut.yaml
+    interval: 86400
+  Bilibili:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Bilibili.yaml"
+    path: ./ACL4SSR/Bilibili.yaml
+    interval: 86400
+  BilibiliHMT:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/BilibiliHMT.yaml"
+    path: ./ACL4SSR/BilibiliHMT.yaml
+    interval: 86400
+  EHGallery:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/EHGallery.yaml"
+    path: ./ACL4SSR/EHGallery.yaml
+    interval: 86400   
+  Google:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Google.yaml"
+    path: ./ACL4SSR/Google.yaml
+    interval: 86400         
+  Microsoft:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Microsoft.yaml"
+    path: ./ACL4SSR/Microsoft.yaml
+    interval: 86400
+  NetEaseMusic:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/NetEaseMusic.yaml"
+    path: ./ACL4SSR/NetEaseMusic.yaml
+    interval: 86400
+  OneDrive:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/OneDrive.yaml"
+    path: ./ACL4SSR/OneDrive.yaml
+    interval: 86400
+  OpenAi:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/OpenAi.yaml"
+    path: ./ACL4SSR/OpenAi.yaml
+    interval: 86400
+  Telegram:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Telegram.yaml"
+    path: ./ACL4SSR/Telegram.yaml
+    interval: 86400
+  YouTube:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/YouTube.yaml"
+    path: ./ACL4SSR/YouTube.yaml
+    interval: 86400
+  BanAD:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/BanAD.yaml"
+    path: ./ACL4SSR/BanAD.yaml
+    interval: 86400
+  BanProgramAD:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/BanProgramAD.yaml"
+    path: ./ACL4SSR/BanProgramAD.yaml
+    interval: 86400
+  ChinaCompanyIp:
+    type: http
+    behavior: ipcidr
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaCompanyIp.yaml"
+    path: ./ACL4SSR/ChinaCompanyIp.yaml
+    interval: 86400
+  ChinaDomain:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaDomain.yaml"
+    path: ./ACL4SSR/ChinaDomain.yaml
+    interval: 86400
+  ChinaMedia:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaMedia.yaml"
+    path: ./ACL4SSR/ChinaMedia.yaml
+    interval: 86400
+  Download:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Download.yaml"
+    path: ./ACL4SSR/Download.yaml
+    interval: 86400
+  LocalAreaNetwork:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/LocalAreaNetwork.yaml"
+    path: ./ACL4SSR/LocalAreaNetwork.yaml
+    interval: 86400
+  ProxyLite:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyLite.yaml"
+    path: ./ACL4SSR/ProxyLite.yaml
+    interval: 86400
+  ProxyMedia:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyMedia.yaml"
+    path: ./ACL4SSR/ProxyMedia.yaml
+    interval: 86400
+  UnBan:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/UnBan.yaml"
+    path: ./ACL4SSR/UnBan.yaml
+    interval: 86400 
+
+rules:
+  - DOMAIN-SUFFIX,dmhy.best,📢 做种汇报
+  - DOMAIN-SUFFIX,tracker.m-team.cc,📢 做种汇报
+  - DOMAIN-SUFFIX,tracker.bakabt.me,📢 做种汇报
+  - DOMAIN-SUFFIX,t.et8.org,📢 做种汇报
+  - DOMAIN-SUFFIX,skyey.win,📢 做种汇报
+  - DOMAIN-SUFFIX,dmhy.org,♻️ 自动选择
+  - DOMAIN-SUFFIX,acgnx.se,♻️ 自动选择
+  - DOMAIN-SUFFIX,nyaa.si,♻️ 自动选择
+  - DOMAIN-SUFFIX,bakabt.me,♻️ 自动选择
+  - DOMAIN-SUFFIX,m-team.cc,♻️ 自动选择
+  - PROCESS-NAME,qbittorrent.exe,📢 做种汇报
+  - PROCESS-NAME,uTorrent.exe,📢 做种汇报
+  - RULE-SET,LocalAreaNetwork,DIRECT
+  - RULE-SET,UnBan,DIRECT
+  - RULE-SET,BanAD,REJECT
+  - RULE-SET,BanProgramAD,REJECT
+  - PROCESS-NAME,baidunetdisk.exe,DIRECT
+  - PROCESS-NAME,baidunetdiskhost.exe,DIRECT
+  - PROCESS-NAME,DownloadSDKServer.exe,DIRECT
+  - PROCESS-NAME,Thunder.exe,DIRECT
+  - PROCESS-NAME,TIM.exe,DIRECT
+  - PROCESS-NAME,cloudmusic.exe,DIRECT
+  - PROCESS-NAME,Code.exe,♻️ 自动选择
+  - PROCESS-NAME,yt-dlp.exe,♻️ 自动选择
+  - PROCESS-NAME,Telegram.exe,♻️ 自动选择
+  - DOMAIN-KEYWORD,hanime,🇸🇬.SG
+  - DOMAIN-KEYWORD,xsus,🇸🇬.SG
+  - DOMAIN-KEYWORD,cloudflare,DIRECT
+  - DOMAIN-KEYWORD,speedtest,DIRECT
+  - RULE-SET,OneDrive,DIRECT
+  - RULE-SET,BilibiliHMT,📺 番剧出差
+  - RULE-SET,Bilibili,📺 哔哩哔哩
+  - RULE-SET,Bahamut,🌍 国外媒体
+  - RULE-SET,YouTube,🌍 国外媒体
+  - RULE-SET,Google,🇺🇲.US
+  - RULE-SET,OpenAi,🇺🇲.US
+  - GEOIP,US,🇺🇲.US
+  - GEOIP,SG,🇸🇬.SG
+  - GEOIP,HK,🇭🇰.HK
+  - GEOIP,TW,🇨🇳.TW
+  - GEOIP,JP,🇯🇵.JP
+  - RULE-SET,Telegram,♻️ 自动选择
+  - RULE-SET,EHGallery,♻️ 自动选择
+  - RULE-SET,Microsoft,♻️ 自动选择
+  - RULE-SET,ProxyMedia,♻️ 自动选择
+  - RULE-SET,ProxyLite,♻️ 自动选择
+  - GEOIP,CN,DIRECT
+  - RULE-SET,NetEaseMusic,DIRECT
+  - RULE-SET,ChinaMedia,DIRECT
+  - RULE-SET,ChinaDomain,DIRECT
+  - RULE-SET,ChinaCompanyIp,DIRECT
+  - RULE-SET,Download,DIRECT  
+  - MATCH,♻️ 自动选择
