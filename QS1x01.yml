@@ -88,7 +88,7 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 60
     tolerance: 10
-    filter: "US|tate|美"
+    filter: "US|tate|美国"
     use:
       - Hybrid
       - Trunk
@@ -98,7 +98,7 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 60
     tolerance: 10
-    filter: "SG|ingapore|坡|狮|新"
+    filter: "SG|ingapore|坡|狮"
     use:
       - Hybrid
       - Trunk
@@ -108,7 +108,7 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 60
     tolerance: 10
-    filter: "HK|ong|港"
+    filter: "HK|ong|香港"
     use:
       - Hybrid
       - Trunk
@@ -118,7 +118,7 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 60
     tolerance: 10
-    filter: "TW|aiwan|台"
+    filter: "TW|aiwan|台湾"
     use:
       - Hybrid
       - Trunk
@@ -128,7 +128,7 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 60
     tolerance: 10
-    filter: "JP|apan|日"
+    filter: "JP|apan|日本"
     use:
       - Hybrid
       - Trunk
