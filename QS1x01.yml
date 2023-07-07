@@ -37,8 +37,8 @@ proxy-groups:
   - name: ♻️ 自动选择
     type: url-test
     url: https://www.gstatic.com/generate_204
-    interval: 60
-    tolerance: 10
+    interval: 1m
+    tolerance: 10ms
     proxies:
       - 🇺🇲.US
       - 🇸🇬.SG
@@ -86,8 +86,8 @@ proxy-groups:
     type: load-balance
     strategy: round-robin
     url: https://www.gstatic.com/generate_204
-    interval: 60
-    tolerance: 10
+    interval: 1m
+    tolerance: 10ms
     filter: "US|tate|美国"
     use:
       - Hybrid
@@ -96,8 +96,8 @@ proxy-groups:
     type: load-balance
     strategy: round-robin
     url: https://www.gstatic.com/generate_204
-    interval: 60
-    tolerance: 10
+    interval: 1m
+    tolerance: 10ms
     filter: "SG|ingapore|坡|狮"
     use:
       - Hybrid
@@ -106,8 +106,8 @@ proxy-groups:
     type: load-balance
     strategy: round-robin
     url: https://www.gstatic.com/generate_204
-    interval: 60
-    tolerance: 10
+    interval: 1m
+    tolerance: 10ms
     filter: "HK|ong|香港"
     use:
       - Hybrid
@@ -116,8 +116,8 @@ proxy-groups:
     type: load-balance
     strategy: round-robin
     url: https://www.gstatic.com/generate_204
-    interval: 60
-    tolerance: 10
+    interval: 1m
+    tolerance: 10ms
     filter: "TW|aiwan|台湾"
     use:
       - Hybrid
@@ -126,32 +126,52 @@ proxy-groups:
     type: load-balance
     strategy: round-robin
     url: https://www.gstatic.com/generate_204
-    interval: 60
-    tolerance: 10
-    filter: "JP|apan|日本"
+    interval: 1m
+    tolerance: 10ms
+    filter: "JP|apan|东京|日本"
     use:
       - Hybrid
       - Trunk
 
 proxy-providers:
-  Trunk:
-    type: http
-    url: "https://sub.xeton.dev/sub?target=clash&url=&udp=true&list=true&exclude=(专线)"
-    interval: 7200
-    path: ./Trunk.yaml
-    health-check:
-      enable: true
-      interval: 60
-      url: https://www.gstatic.com/generate_204
   Hybrid:
     type: http
-    url: "http://sub.xeton.dev/sub?target=clash&url=&udp=true&list=true&exclude=(专线)"
-    interval: 7200
+    url: "https://api.tsutsu.one/sub?target=clash&url=&udp=true&list=true"
+    interval: 2h
+    filter: ^(?!.*专线).*
     path: ./Hybrid.yaml
     health-check:
       enable: true
-      interval: 60
+      interval: 1m
       url: https://www.gstatic.com/generate_204
+  Trunk:
+    type: http
+    url: "https://api.tsutsu.one/sub?target=clash&url=&udp=true&list=true"
+    interval: 2h
+    filter: ^(?!.*专线).*
+    path: ./Trunk.yaml
+    health-check:
+      enable: true
+      interval: 1m
+      url: https://www.gstatic.com/generate_204
+  # Access:
+  #   type: http
+  #   url:  "https://sub.xeton.dev/sub?target=clash&url=&udp=true&list=true&exclude=(专线)"
+  #   interval: 2h
+  #   path: ./Access.yaml
+  #   health-check:
+  #     enable: true
+  #     interval: 1m
+  #     url: https://www.gstatic.com/generate_204
+  # Switch:
+  #   type: http
+  #   url:  "https://sub.xeton.dev/sub?target=clash&url=&udp=true&list=true&exclude=(专线)"
+  #   interval: 2h
+  #   path: ./Switch.yaml
+  #   health-check:
+  #     enable: true
+  #     interval: 1m
+  #     url: https://www.gstatic.com/generate_204
 
 rule-providers:
   Bahamut:
@@ -159,129 +179,119 @@ rule-providers:
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Bahamut.yaml"
     path: ./ACL4SSR/Bahamut.yaml
-    interval: 86400
+    interval: 24h
   Bilibili:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Bilibili.yaml"
     path: ./ACL4SSR/Bilibili.yaml
-    interval: 86400
+    interval: 24h
   BilibiliHMT:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/BilibiliHMT.yaml"
     path: ./ACL4SSR/BilibiliHMT.yaml
-    interval: 86400
+    interval: 24h
   EHGallery:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/EHGallery.yaml"
     path: ./ACL4SSR/EHGallery.yaml
-    interval: 86400   
+    interval: 24h   
   Google:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Google.yaml"
     path: ./ACL4SSR/Google.yaml
-    interval: 86400         
+    interval: 24h         
   Microsoft:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Microsoft.yaml"
     path: ./ACL4SSR/Microsoft.yaml
-    interval: 86400
+    interval: 24h
   NetEaseMusic:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/NetEaseMusic.yaml"
     path: ./ACL4SSR/NetEaseMusic.yaml
-    interval: 86400
+    interval: 24h
   OneDrive:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/OneDrive.yaml"
     path: ./ACL4SSR/OneDrive.yaml
-    interval: 86400
+    interval: 24h
   OpenAi:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/OpenAi.yaml"
     path: ./ACL4SSR/OpenAi.yaml
-    interval: 86400
+    interval: 24h
   Telegram:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/Telegram.yaml"
     path: ./ACL4SSR/Telegram.yaml
-    interval: 86400
+    interval: 24h
   YouTube:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Ruleset/YouTube.yaml"
     path: ./ACL4SSR/YouTube.yaml
-    interval: 86400
-  BanAD:
-    type: http
-    behavior: classical
-    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/BanAD.yaml"
-    path: ./ACL4SSR/BanAD.yaml
-    interval: 86400
+    interval: 24h
   BanProgramAD:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/BanProgramAD.yaml"
     path: ./ACL4SSR/BanProgramAD.yaml
-    interval: 86400
+    interval: 24h
   ChinaCompanyIp:
     type: http
     behavior: ipcidr
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaCompanyIp.yaml"
     path: ./ACL4SSR/ChinaCompanyIp.yaml
-    interval: 86400
+    interval: 24h
   ChinaDomain:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaDomain.yaml"
     path: ./ACL4SSR/ChinaDomain.yaml
-    interval: 86400
+    interval: 24h
   ChinaMedia:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaMedia.yaml"
     path: ./ACL4SSR/ChinaMedia.yaml
-    interval: 86400
+    interval: 24h
   Download:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/Download.yaml"
     path: ./ACL4SSR/Download.yaml
-    interval: 86400
+    interval: 24h
   LocalAreaNetwork:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/LocalAreaNetwork.yaml"
     path: ./ACL4SSR/LocalAreaNetwork.yaml
-    interval: 86400
+    interval: 24h
   ProxyLite:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyLite.yaml"
     path: ./ACL4SSR/ProxyLite.yaml
-    interval: 86400
+    interval: 24h
   ProxyMedia:
     type: http
     behavior: classical
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyMedia.yaml"
     path: ./ACL4SSR/ProxyMedia.yaml
-    interval: 86400
-  UnBan:
-    type: http
-    behavior: classical
-    url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/UnBan.yaml"
-    path: ./ACL4SSR/UnBan.yaml
-    interval: 86400 
+    interval: 24h
 
 rules:
+  - RULE-SET,LocalAreaNetwork,DIRECT
+  - RULE-SET,BanProgramAD,REJECT
   - DOMAIN-SUFFIX,dmhy.best,📢 做种汇报
   - DOMAIN-SUFFIX,tracker.m-team.cc,📢 做种汇报
   - DOMAIN-SUFFIX,tracker.bakabt.me,📢 做种汇报
@@ -294,10 +304,6 @@ rules:
   - DOMAIN-SUFFIX,m-team.cc,♻️ 自动选择
   - PROCESS-NAME,qbittorrent.exe,📢 做种汇报
   - PROCESS-NAME,uTorrent.exe,📢 做种汇报
-  - RULE-SET,LocalAreaNetwork,DIRECT
-  - RULE-SET,UnBan,DIRECT
-  - RULE-SET,BanAD,REJECT
-  - RULE-SET,BanProgramAD,REJECT
   - PROCESS-NAME,baidunetdisk.exe,DIRECT
   - PROCESS-NAME,baidunetdiskhost.exe,DIRECT
   - PROCESS-NAME,DownloadSDKServer.exe,DIRECT
